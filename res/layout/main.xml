@@ -5,8 +5,23 @@
     android:orientation="vertical" >
 
     <TextView
+        android:id="@+id/display"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/hello" />
+        android:text="Enter the name of the bus below and click start." />
+
+    <EditText
+        android:id="@+id/busname"
+        android:layout_width="238dp"
+        android:layout_height="wrap_content" 
+        android:layout_gravity="center_horizontal" />
+
+    <Button
+        android:id="@+id/start"
+        android:onClick="onClickLocate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="Start" />
 
 </LinearLayout>
