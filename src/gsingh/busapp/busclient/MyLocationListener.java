@@ -39,19 +39,14 @@ public class MyLocationListener implements LocationListener {
 	private final String FILENAME = "/coord.xml";
 
 	/**
-	 * URL object of server
-	 */
-	URL url;
-
-	/**
-	 * Address of server
-	 */
-	String URLText = null;
-
-	/**
 	 * Information TextView
 	 */
 	TextView display = null;
+
+	/**
+	 * Bus this client is tracking
+	 */
+	Bus bus = null;
 
 	/**
 	 * Latitude of user
@@ -63,24 +58,12 @@ public class MyLocationListener implements LocationListener {
 	 */
 	double lon;
 
-	/**
-	 * Name of the bus this client is tracking
-	 */
-	String busName = null;
-
-	/**
-	 * Bus this client is tracking
-	 */
-	Bus bus = null;
-
 	MyLocationListener(TextView display) {
 		super();
 		this.display = display;
 	}
 
 	public void setBusName(String name) {
-		this.busName = name;
-
 		// Get all stops for bus
 
 		// Get all routes from XML file
@@ -98,7 +81,7 @@ public class MyLocationListener implements LocationListener {
 				routeName = route.getElementsByTagName("name").item(0)
 						.getFirstChild().getNodeValue();
 
-				if (routeName == busName) {
+				if (routeName == name) {
 
 					// For each stop, get the stop name and add it to the list
 					sl = route.getElementsByTagName("stop");
@@ -113,7 +96,7 @@ public class MyLocationListener implements LocationListener {
 
 						// Once all stops for this bus have been added, create
 						// the bus
-						bus = new Bus(busName, stopNames);
+						bus = new Bus(name, stopNames);
 
 						// Since we're done, break
 						break;
@@ -158,9 +141,9 @@ public class MyLocationListener implements LocationListener {
 
 	private void updateBusLocation() {
 
-		// TODO: Add route name
+		// TODO: Make server update route for given routename
 		// Location GET URL
-		URLText = String.format(SERVERNAME
+		String URLText = String.format(SERVERNAME
 				+ "/bus.php?routeName=%s&lat=%f&lon=%f",
 						bus.getName(), lat, lon);
 
@@ -204,10 +187,10 @@ public class MyLocationListener implements LocationListener {
 
 	private void updateScreenText() {
 
-		// TODO: Use StringBuilder or format()
 		// Create text to be displayed on screen
-		String Text = "My current location is: " + "\nLatitude = " + lat
-				+ "\nLongitude = " + lon;
+		String Text = String.format(
+				"My current location is:\nLatitude = %d\nLongitude = %d", lat,
+				lon);
 
 		// Display location
 		display.append(Text);
@@ -223,6 +206,7 @@ public class MyLocationListener implements LocationListener {
 		// Update text on the screen
 		updateScreenText();
 
+		// Send bus location to server
 		updateBusLocation();
 	}
 
