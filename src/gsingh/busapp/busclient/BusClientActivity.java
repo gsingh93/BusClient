@@ -6,6 +6,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 public class BusClientActivity extends Activity {
@@ -18,6 +19,11 @@ public class BusClientActivity extends Activity {
 	 * and instructions
 	 */
 	private TextView display = null;
+
+	/**
+	 * True of the bus is being tracked, false otherwise
+	 */
+	private Boolean tracking = false;
 
     /** Called when the activity is first created. */
     @Override
@@ -33,12 +39,22 @@ public class BusClientActivity extends Activity {
     }
 
 	public void onClickLocate(View v) {
-		((MyLocationListener) locListener).setBusName(display.getText()
-				.toString());
-		// TODO: How frequent are the updates
-		locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0,
-				locListener);
-		display.append("\nTracking service has started");
+		if (tracking == false) {
+			((MyLocationListener) locListener).setBusName(display.getText()
+					.toString());
+			// TODO: How frequent are the updates
+			locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,
+					0, locListener);
+			display.append("\nTracking service has started");
+			
+			((Button) v).setText("Start");
+
+			tracking = true;
+		} else {
+			locManager.removeUpdates(locListener);
+			display.append("\nTracking service has stopped");
+			((Button) v).setText("Stop");
+		}
 
 	}
 }
