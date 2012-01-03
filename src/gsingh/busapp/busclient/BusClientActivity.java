@@ -7,6 +7,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 public class BusClientActivity extends Activity {
@@ -25,35 +26,39 @@ public class BusClientActivity extends Activity {
 	 */
 	private Boolean tracking = false;
 
-    /** Called when the activity is first created. */
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
+	/** Called when the activity is first created. */
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.main);
 
 		display = (TextView) findViewById(R.id.display);
 
 		/* Use the LocationManager class to obtain GPS locations */
 		locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		locListener = new MyLocationListener(display);
-    }
+	}
 
 	public void onClickLocate(View v) {
 		if (tracking == false) {
-			((MyLocationListener) locListener).setBusName(display.getText()
+
+			EditText busName = (EditText) findViewById(R.id.busname);
+			((MyLocationListener) locListener).initBus(busName.getText()
 					.toString());
 			// TODO: How frequent are the updates
 			locManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,
 					0, locListener);
 			display.append("\nTracking service has started");
-			
-			((Button) v).setText("Start");
+
+			((Button) v).setText("Stop");
 
 			tracking = true;
 		} else {
 			locManager.removeUpdates(locListener);
 			display.append("\nTracking service has stopped");
-			((Button) v).setText("Stop");
+			((Button) v).setText("Start");
+
+			tracking = false;
 		}
 
 	}

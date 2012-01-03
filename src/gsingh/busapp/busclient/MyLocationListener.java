@@ -63,7 +63,7 @@ public class MyLocationListener implements LocationListener {
 		this.display = display;
 	}
 
-	public void setBusName(String name) {
+	public void initBus(String name) {
 		// Get all stops for bus
 
 		// Get all routes from XML file
@@ -81,8 +81,7 @@ public class MyLocationListener implements LocationListener {
 				routeName = route.getElementsByTagName("name").item(0)
 						.getFirstChild().getNodeValue();
 
-				if (routeName == name) {
-
+				if (routeName.equals(name)) {
 					// For each stop, get the stop name and add it to the list
 					sl = route.getElementsByTagName("stop");
 
@@ -143,9 +142,14 @@ public class MyLocationListener implements LocationListener {
 
 		// TODO: Make server update route for given routename
 		// Location GET URL
+
+		Log.d("tag", bus.getName());
+		Log.d("tag", String.valueOf(lat));
+		Log.d("tag", String.valueOf(lon));
+
 		String URLText = String.format(SERVERNAME
-				+ "/bus.php?routeName=%s&lat=%f&lon=%f",
-						bus.getName(), lat, lon);
+				+ "/bus.php?routeName=%s&lat=%f&lon=%f", bus.getName(), lat,
+				lon);
 
 		List<String> stopNames = bus.getStopNames();
 		List<Double> times = bus.getStopTimes();
@@ -189,14 +193,13 @@ public class MyLocationListener implements LocationListener {
 
 		// Create text to be displayed on screen
 		String Text = String.format(
-				"My current location is:\nLatitude = %d\nLongitude = %d", lat,
-				lon);
+				"\nMy current location is:\nLatitude = %f\nLongitude = %f",
+				lat, lon);
 
 		// Display location
 		display.append(Text);
 		display.append("\n\nCheck http://michigangurudwara.com/bus.php to see your location");
 	}
-
 
 	@Override
 	public void onLocationChanged(Location loc) {
